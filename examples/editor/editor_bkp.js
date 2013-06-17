@@ -2157,16 +2157,11 @@ Editor.Helpers = Helpers;
 Editor.helpers = Helpers;
 Editor.vfFactory = new VexFlowFactory();
 Editor.music = new Vex.Flow.Music();
-
-
 var canvas = $("#canvas")[0];
 canvas.width = $("#canvasWrapper").width();
-
 var placeholderCanvas = $("#placeholder");
 placeholderCanvas[0].width = canvas.width;
-
 var canvasWidth = canvas.width - 1;
-
 var score = new Editor.Score().setRendererCanvas(canvas);
 var audiolet = new Audiolet();
 var ctx = score.renderer.getContext();
@@ -2193,7 +2188,7 @@ var newMeasure3 = new NotationMeasure({
 });
 var newMeasure4 = new TabMeasure({
     timeSignature: "4/4",
-    strings: 6,
+    strings: 7,
     tuning: "fstandard"
 });
 score.parts[0].addMeasure(newMeasure);
@@ -2204,496 +2199,493 @@ var selection = new Selection();
 var handler = new SelectionHandler(selection);
 var mode = "notation-edit";
 score.reset();
-
-
-
-// $(document).ready(function () {
-//     $("button[name='noteDuration']").on("click", function () {
-//         if (mode == "tab-edit") {
-//             var a = $(this).val();
-//             selection.getN().forEach(function (b) {
-//                 var c = false;
-//                 if (b.isRest()) {
-//                     c = true
-//                 }
-//                 b.setDuration(a);
-//                 if (c) {
-//                     b.convertToRest()
-//                 }
-//             });
-//             score.partLinks[1].convertTabToNotation(selection.getM().first().getIndex());
-//             score.reset()
-//         }
-//     });
-//     $("body").on("click", "#dot", function () {
-//         var a = selection.getM();
-//         if (a && a.first() instanceof TabMeasure) {
-//             handler.toggleDot();
-//             score.reset()
-//         }
-//     });
-//     $("body").on("click", "#rest", function () {
-//         var a = selection.getM();
-//         if (a && a.first() instanceof TabMeasure) {
-//             handler.convertToRests();
-//             score.reset()
-//         }
-//     });
-//     $("#beatsPerMeasure, #beatsValue").on("change", function () {
-//         var b = parseInt($("#beatsPerMeasure").val(), 10),
-//             c = parseInt($("#beatsValue").val(), 10);
-//         var a = _.map(selection.getM(), function (d) {
-//             return d.getIndex()
-//         });
-//         a.forEach(function (d) {
-//             score.parts.forEach(function (f) {
-//                 f.measures[d].setTimeSignature(new TimeSignature(b + "/" + c))
-//             })
-//         });
-//         score.reset()
-//     });
-//     $("#clef").on("change", function () {
-//         var c = $("#clef").val();
-//         var a = selection.getM();
-//         for (var b = 0; b < a.length; b++) {
-//             a[b].setClef(c, true)
-//         }
-//         score.reset()
-//     });
-//     $("#articulations a").on("click", function () {
-//         var b = $(this).html().toUpperCase(),
-//             a = selection.getN();
-//         a.forEach(function (c) {
-//             c.addArticulation(Editor.articulations[b])
-//         });
-//         score.reset()
-//     });
-//     $("#keySig").on("change", function () {
-//         var b = $(this).val(),
-//             a = selection.getM();
-//         var c = _.map(selection.getM(), function (d) {
-//             return d.getIndex()
-//         });
-//         c.forEach(function (d) {
-//             score.parts.forEach(function (f) {
-//                 if (f.measures[d] instanceof NotationMeasure) {
-//                     f.measures[d].setKeySignature(b)
-//                 }
-//             })
-//         });
-//         score.reset()
-//     });
-//     $("#strings").on("change", function () {
-//         selection.getM().first().setStrings(parseInt($(this).val(), 10));
-//         score.reset()
-//     });
-//     $("#addMeasure").on("click", function () {
-//         var a = selection.getM().last() ? selection.getM().last().getIndex() : score.parts[0].measures.length - 1;
-//         score.parts.forEach(function (b) {
-//             b.addMeasure(b.measures[a].clone(), a + 1)
-//         });
-//         score.reset()
-//     });
-//     $("#deleteMeasure").click(function () {
-//         var b = selection.getM();
-//         handler.moveToPrevMeasure();
-//         var a = _.map(b, function (c) {
-//             return c.getIndex()
-//         });
-//         a.forEach(function (c) {
-//             score.parts.forEach(function (d) {
-//                 d.removeMeasure(c)
-//             })
-//         });
-//         score.reset()
-//     });
-//     $("#play").click(function () {
-//         Play(audiolet, $("#bpm").val())
-//     });
-//     $("#repStart").on("change", function () {
-//         var a = _.map(selection.getM(), function (d) {
-//             return d.getIndex()
-//         });
-//         for (var c = 0; c < a.length; c++) {
-//             var b = a[c];
-//             score.parts.forEach(function (d) {
-//                 if ($("#repStart").attr("checked")) {
-//                     d.measures[b].setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN)
-//                 } else {
-//                     d.measures[b].setBegBarType(Vex.Flow.Barline.type.SINGLE)
-//                 }
-//             })
-//         }
-//         score.reset()
-//     });
-//     $("#repEnd").on("change", function () {
-//         var a = _.map(selection.getM(), function (d) {
-//             return d.getIndex()
-//         });
-//         for (var c = 0; c < a.length; c++) {
-//             var b = a[c];
-//             score.parts.forEach(function (d) {
-//                 if ($("#repEnd").attr("checked")) {
-//                     d.measures[b].setEndBarType(Vex.Flow.Barline.type.REPEAT_END)
-//                 } else {
-//                     d.measures[b].setEndBarType(Vex.Flow.Barline.type.SINGLE)
-//                 }
-//             })
-//         }
-//         score.reset()
-//     });
-//     $("#scrollRight").click(function () {
-//         ctx.translate(-30, 0);
-//         score.reset()
-//     });
-//     $("#scrollLeft").click(function () {
-//         ctx.translate(30, 0);
-//         score.reset()
-//     });
-//     $("#toPNG").on("click", function () {
-//         var a = document.getElementById("canvas");
-//         window.location = a.toDataURL("image/png");
-//     })
-// });
+$(document).ready(function () {
+    $("button[name='noteDuration']").on("click", function () {
+        if (mode == "tab-edit") {
+            var a = $(this).val();
+            selection.getN().forEach(function (b) {
+                var c = false;
+                if (b.isRest()) {
+                    c = true
+                }
+                b.setDuration(a);
+                if (c) {
+                    b.convertToRest()
+                }
+            });
+            score.partLinks[1].convertTabToNotation(selection.getM().first().getIndex());
+            score.reset()
+        }
+    });
+    $("body").on("click", "#dot", function () {
+        var a = selection.getM();
+        if (a && a.first() instanceof TabMeasure) {
+            handler.toggleDot();
+            score.reset()
+        }
+    });
+    $("body").on("click", "#rest", function () {
+        var a = selection.getM();
+        if (a && a.first() instanceof TabMeasure) {
+            handler.convertToRests();
+            score.reset()
+        }
+    });
+    $("#beatsPerMeasure, #beatsValue").on("change", function () {
+        var b = parseInt($("#beatsPerMeasure").val(), 10),
+            c = parseInt($("#beatsValue").val(), 10);
+        var a = _.map(selection.getM(), function (d) {
+            return d.getIndex()
+        });
+        a.forEach(function (d) {
+            score.parts.forEach(function (f) {
+                f.measures[d].setTimeSignature(new TimeSignature(b + "/" + c))
+            })
+        });
+        score.reset()
+    });
+    $("#clef").on("change", function () {
+        var c = $("#clef").val();
+        var a = selection.getM();
+        for (var b = 0; b < a.length; b++) {
+            a[b].setClef(c, true)
+        }
+        score.reset()
+    });
+    $("#articulations a").on("click", function () {
+        var b = $(this).html().toUpperCase(),
+            a = selection.getN();
+        a.forEach(function (c) {
+            c.addArticulation(Editor.articulations[b])
+        });
+        score.reset()
+    });
+    $("#keySig").on("change", function () {
+        var b = $(this).val(),
+            a = selection.getM();
+        var c = _.map(selection.getM(), function (d) {
+            return d.getIndex()
+        });
+        c.forEach(function (d) {
+            score.parts.forEach(function (f) {
+                if (f.measures[d] instanceof NotationMeasure) {
+                    f.measures[d].setKeySignature(b)
+                }
+            })
+        });
+        score.reset()
+    });
+    $("#strings").on("change", function () {
+        selection.getM().first().setStrings(parseInt($(this).val(), 10));
+        score.reset()
+    });
+    $("#addMeasure").on("click", function () {
+        var a = selection.getM().last() ? selection.getM().last().getIndex() : score.parts[0].measures.length - 1;
+        score.parts.forEach(function (b) {
+            b.addMeasure(b.measures[a].clone(), a + 1)
+        });
+        score.reset()
+    });
+    $("#deleteMeasure").click(function () {
+        var b = selection.getM();
+        handler.moveToPrevMeasure();
+        var a = _.map(b, function (c) {
+            return c.getIndex()
+        });
+        a.forEach(function (c) {
+            score.parts.forEach(function (d) {
+                d.removeMeasure(c)
+            })
+        });
+        score.reset()
+    });
+    $("#play").click(function () {
+        Play(audiolet, $("#bpm").val())
+    });
+    $("#repStart").on("change", function () {
+        var a = _.map(selection.getM(), function (d) {
+            return d.getIndex()
+        });
+        for (var c = 0; c < a.length; c++) {
+            var b = a[c];
+            score.parts.forEach(function (d) {
+                if ($("#repStart").attr("checked")) {
+                    d.measures[b].setBegBarType(Vex.Flow.Barline.type.REPEAT_BEGIN)
+                } else {
+                    d.measures[b].setBegBarType(Vex.Flow.Barline.type.SINGLE)
+                }
+            })
+        }
+        score.reset()
+    });
+    $("#repEnd").on("change", function () {
+        var a = _.map(selection.getM(), function (d) {
+            return d.getIndex()
+        });
+        for (var c = 0; c < a.length; c++) {
+            var b = a[c];
+            score.parts.forEach(function (d) {
+                if ($("#repEnd").attr("checked")) {
+                    d.measures[b].setEndBarType(Vex.Flow.Barline.type.REPEAT_END)
+                } else {
+                    d.measures[b].setEndBarType(Vex.Flow.Barline.type.SINGLE)
+                }
+            })
+        }
+        score.reset()
+    });
+    $("#scrollRight").click(function () {
+        ctx.translate(-30, 0);
+        score.reset()
+    });
+    $("#scrollLeft").click(function () {
+        ctx.translate(30, 0);
+        score.reset()
+    });
+    $("#toPNG").on("click", function () {
+        var a = document.getElementById("canvas");
+        window.location = a.toDataURL("image/png")
+    })
+});
 //neo_willian
 //////////////////////////////
-// CRIA AS ACOES DA PARTITURA
+// CRIA AS ACOES DA
 //////////////////////////////
-// $(document).ready(function () {
-//     keyMaster = key;
-//     $("#acc").hide();
-//     $("#canvasWrapper").on("contextmenu", function () {
-//         return false
-//     });
-//     $("canvas").on("mousedown", function (d) {
-//         if (d.which != 3) {
-//             return
-//         }
-//         $("#acc").css({
-//             top: d.pageY + 25,
-//             left: d.pageX - 60
-//         });
-//         var c = this.relMouseCoords(d);
-//         for (var b = 0; score.parts.length; b++) {
-//             var a = score.parts[b];
-//             clickedMeasure = e.helpers.getClickedMeasure(a.measures, c);
-//             if (clickedMeasure) {
-//                 measureFound = true;
-//                 break
-//             }
-//         }
-//         if (measureFound && selection.getM().contains(clickedMeasure) && clickedMeasure instanceof NotationMeasure) {
-//             clickedMeasure.notes.forEach(function (g) {
-//                 var h = g.getVexFlow().comparePoint(c.x, c.y);
-//                 if (h == "left" || h == "right") {
-//                     return
-//                 }
-//                 var j = g.getKeyFromY(c.y);
-//                 if (j) {
-//                     var f;
-//                     selection.reset().add(j);
-//                     if (j.accidental == "#") {
-//                         f = "#"
-//                     } else {
-//                         if (j.accidental == "b") {
-//                             f = "b"
-//                         } else {
-//                             if (j.accidental == "n" || j.accidental === "") {
-//                                 f = "n"
-//                             }
-//                         }
-//                     }
-//                     $("#acc button.active").removeClass("active");
-//                     $("#acc button[value=" + f + "]").addClass("active");
-//                     $("#acc").fadeIn(50)
-//                 }
-//             })
-//         }
-//     });
-//     $("canvas").on("mouseup", function (a) {
-//         if (a.which != 3) {
-//             return
-//         }
-//         $("#acc").fadeOut(50)
-//     });
-//     $("#acc button").on("mouseup", function (a) {
-//         $(this).click();
-//         $("#acc").fadeOut(50);
-//         return
-//     });
-//     $("#canvasWrapper").on("mouseleave", function () {
-//         $("#acc").fadeOut(50)
-//     });
-//     $("#acc button").on("click", function (a) {
-//         handler.changeAccidentals($(this).val());
-//         score.reset()
-//     });
-//     $("canvas").click(function (E) {
-//         var y = this.relMouseCoords(E),
-//             d = selection.getM(),
-//             c;
-//         for (var G = 0; score.parts.length; G++) {
-//             var z = score.parts[G];
-//             c = e.helpers.getClickedMeasure(z.measures, y);
-//             if (c) {
-//                 measureFound = true;
-//                 if (c instanceof TabMeasure) {
-//                     mode = "tab-edit"
-//                 } else {
-//                     mode = "notation-edit"
-//                 }
-//                 break
-//             }
-//         }
-//         if (measureFound === false) {
-//             selection.part = false;
-//             selection.measures = [];
-//             selection.notes = [];
-//             selection.reset()
-//         }
-//         if (measureFound && mode == "notation-edit" && selection.contains(c) && !c.part.locked) {
-//             var H = c.getStatus();
-//             var D = (H != "complete" && H != "overflown");
-//             var b = $(".active").val();
-//             var v = $("#rest.active").val();
-//             var a = e.Helpers.getNoteFromY(c, y.y, c.getKeySignature());
-//             if (c.getClef() == "percussion") {
-//                 a = Editor.defaultPercTable[J]
-//             }
-//             var J = new Editor.Key(a);
-//             var p = $("#dot.active").val() == "true" ? 1 : 0;
-//             var u = true;
-//             var n = c.notes.length;
-//             var x = -1;
-//             if (n !== 0) {
-//                 var I = "none";
-//                 var F;
-//                 var t;
-//                 for (var C = 0; C < n; C++) {
-//                     var h = c.notes[C];
-//                     var g = c.vexflow.notes[C];
-//                     var f = g.getX() + c.stave.getNoteStartX() + 10;
-//                     var k = f + g.getWidth() + 4;
-//                     Vex.drawDot(ctx, f, g.getYs()[0] - 5, "blue");
-//                     Vex.drawDot(ctx, k, g.getYs()[0] - 5, "blue");
-//                     F = g.comparePoint(y.x, y.y);
-//                     switch (F) {
-//                     case "note":
-//                     case "column":
-//                         var q;
-//                         var m = _.filter(h.keys, function (j) {
-//                             return (j.toString()[j.toString().length - 1] == J.toString()[J.toString().length - 1] && j.toString()[0] == J.toString()[0])
-//                         });
-//                         m = m.first();
-//                         if (!m) {
-//                             h.addKey(J);
-//                             selection.clearKeys().add(J)
-//                         } else {
-//                             if (selection.contains(m)) {
-//                                 if (keyMaster.control) {
-//                                     selection.remove(m)
-//                                 } else {
-//                                     selection.clearKeys();
-//                                     if (m.note.keys.length > 1) {
-//                                         m.note.keys.removeAt(m.getIndex())
-//                                     } else {
-//                                         var r = m.note.measure;
-//                                         m.note.measure.removeNote(m.note);
-//                                         selection.clearNotes().add(r)
-//                                     }
-//                                 }
-//                             } else {
-//                                 if (!keyMaster.control) {
-//                                     selection.clearKeys()
-//                                 }
-//                                 selection.add(m)
-//                             }
-//                         }
-//                         t = true;
-//                         break;
-//                     case "left":
-//                         x = _.indexOf(c.vexflow.notes, g);
-//                         if (I == "right" || I == "none") {
-//                             t = true
-//                         }
-//                         break
-//                     }
-//                     if (g == c.vexflow.notes.last() && F == "right") {
-//                         x = n
-//                     }
-//                     I = F;
-//                     if (t) {
-//                         break
-//                     }
-//                 }
-//             } else {
-//                 x = 0
-//             } if (x > -1 && D) {
-//                 var o = new Editor.Note().addKey(J).setDuration(b + (v ? "r" : "")).setDots(p);
-//                 c.addNote(o, x);
-//                 selection.clearKeys().add(J)
-//             }
-//         } else {
-//             if (measureFound && c instanceof TabMeasure) {
-//                 if (!keyMaster.control) {
-//                     selection.reset()
-//                 }
-//                 selection.add(c);
-//                 var s = e.Helpers.getLineFromY(c, y.y);
-//                 if (s == -1) {
-//                     selection.string = 0
-//                 } else {
-//                     selection.string = s
-//                 }
-//                 var w, B;
-//                 for (var A = 0; A < c.notes.length; A++) {
-//                     var g = c.vexflow.notes[A];
-//                     var f = g.getX() + c.stave.getNoteStartX() + 10;
-//                     var k = f + g.getWidth() + 4;
-//                     if (f <= y.x) {
-//                         B = c.notes[A];
-//                         w = e.helpers.findPositionWithString(B, selection.string + 1)
-//                     }
-//                 }
-//                 if (w) {
-//                     selection.reset().add(w)
-//                 } else {
-//                     if (B) {
-//                         selection.reset().add(B)
-//                     }
-//                 }
-//             } else {
-//                 if (measureFound && !selection.contains(c) && !c.part.locked) {
-//                     if (!keyMaster.control) {
-//                         selection.reset()
-//                     }
-//                     selection.add(c);
-//                     for (var A = 0; A < c.notes.length; A++) {
-//                         var g = c.vexflow.notes[A];
-//                         var f = g.getX() + c.stave.getNoteStartX() + 10;
-//                         var k = f + g.getWidth() + 4;
-//                         if (f <= y.x) {
-//                             selection.reset().add(c.notes[A].keys.first())
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//         score.constructVexFlow();
-//         score.reset();
-//         return false
-//     })
-// });
+$(document).ready(function () {
+    keyMaster = key;
+    $("#acc").hide();
+    $("#canvasWrapper").on("contextmenu", function () {
+        return false
+    });
+    $("canvas").on("mousedown", function (d) {
+        if (d.which != 3) {
+            return
+        }
+        $("#acc").css({
+            top: d.pageY + 25,
+            left: d.pageX - 60
+        });
+        var c = this.relMouseCoords(d);
+        for (var b = 0; score.parts.length; b++) {
+            var a = score.parts[b];
+            clickedMeasure = e.helpers.getClickedMeasure(a.measures, c);
+            if (clickedMeasure) {
+                measureFound = true;
+                break
+            }
+        }
+        if (measureFound && selection.getM().contains(clickedMeasure) && clickedMeasure instanceof NotationMeasure) {
+            clickedMeasure.notes.forEach(function (g) {
+                var h = g.getVexFlow().comparePoint(c.x, c.y);
+                if (h == "left" || h == "right") {
+                    return
+                }
+                var j = g.getKeyFromY(c.y);
+                if (j) {
+                    var f;
+                    selection.reset().add(j);
+                    if (j.accidental == "#") {
+                        f = "#"
+                    } else {
+                        if (j.accidental == "b") {
+                            f = "b"
+                        } else {
+                            if (j.accidental == "n" || j.accidental === "") {
+                                f = "n"
+                            }
+                        }
+                    }
+                    $("#acc button.active").removeClass("active");
+                    $("#acc button[value=" + f + "]").addClass("active");
+                    $("#acc").fadeIn(50)
+                }
+            })
+        }
+    });
+    $("canvas").on("mouseup", function (a) {
+        if (a.which != 3) {
+            return
+        }
+        $("#acc").fadeOut(50)
+    });
+    $("#acc button").on("mouseup", function (a) {
+        $(this).click();
+        $("#acc").fadeOut(50);
+        return
+    });
+    $("#canvasWrapper").on("mouseleave", function () {
+        $("#acc").fadeOut(50)
+    });
+    $("#acc button").on("click", function (a) {
+        handler.changeAccidentals($(this).val());
+        score.reset()
+    });
+    $("canvas").click(function (E) {
+        var y = this.relMouseCoords(E),
+            d = selection.getM(),
+            c;
+        for (var G = 0; score.parts.length; G++) {
+            var z = score.parts[G];
+            c = e.helpers.getClickedMeasure(z.measures, y);
+            if (c) {
+                measureFound = true;
+                if (c instanceof TabMeasure) {
+                    mode = "tab-edit"
+                } else {
+                    mode = "notation-edit"
+                }
+                break
+            }
+        }
+        if (measureFound === false) {
+            selection.part = false;
+            selection.measures = [];
+            selection.notes = [];
+            selection.reset()
+        }
+        if (measureFound && mode == "notation-edit" && selection.contains(c) && !c.part.locked) {
+            var H = c.getStatus();
+            var D = (H != "complete" && H != "overflown");
+            var b = $(".active").val();
+            var v = $("#rest.active").val();
+            var a = e.Helpers.getNoteFromY(c, y.y, c.getKeySignature());
+            if (c.getClef() == "percussion") {
+                a = Editor.defaultPercTable[J]
+            }
+            var J = new Editor.Key(a);
+            var p = $("#dot.active").val() == "true" ? 1 : 0;
+            var u = true;
+            var n = c.notes.length;
+            var x = -1;
+            if (n !== 0) {
+                var I = "none";
+                var F;
+                var t;
+                for (var C = 0; C < n; C++) {
+                    var h = c.notes[C];
+                    var g = c.vexflow.notes[C];
+                    var f = g.getX() + c.stave.getNoteStartX() + 10;
+                    var k = f + g.getWidth() + 4;
+                    Vex.drawDot(ctx, f, g.getYs()[0] - 5, "blue");
+                    Vex.drawDot(ctx, k, g.getYs()[0] - 5, "blue");
+                    F = g.comparePoint(y.x, y.y);
+                    switch (F) {
+                    case "note":
+                    case "column":
+                        var q;
+                        var m = _.filter(h.keys, function (j) {
+                            return (j.toString()[j.toString().length - 1] == J.toString()[J.toString().length - 1] && j.toString()[0] == J.toString()[0])
+                        });
+                        m = m.first();
+                        if (!m) {
+                            h.addKey(J);
+                            selection.clearKeys().add(J)
+                        } else {
+                            if (selection.contains(m)) {
+                                if (keyMaster.control) {
+                                    selection.remove(m)
+                                } else {
+                                    selection.clearKeys();
+                                    if (m.note.keys.length > 1) {
+                                        m.note.keys.removeAt(m.getIndex())
+                                    } else {
+                                        var r = m.note.measure;
+                                        m.note.measure.removeNote(m.note);
+                                        selection.clearNotes().add(r)
+                                    }
+                                }
+                            } else {
+                                if (!keyMaster.control) {
+                                    selection.clearKeys()
+                                }
+                                selection.add(m)
+                            }
+                        }
+                        t = true;
+                        break;
+                    case "left":
+                        x = _.indexOf(c.vexflow.notes, g);
+                        if (I == "right" || I == "none") {
+                            t = true
+                        }
+                        break
+                    }
+                    if (g == c.vexflow.notes.last() && F == "right") {
+                        x = n
+                    }
+                    I = F;
+                    if (t) {
+                        break
+                    }
+                }
+            } else {
+                x = 0
+            } if (x > -1 && D) {
+                var o = new Editor.Note().addKey(J).setDuration(b + (v ? "r" : "")).setDots(p);
+                c.addNote(o, x);
+                selection.clearKeys().add(J)
+            }
+        } else {
+            if (measureFound && c instanceof TabMeasure) {
+                if (!keyMaster.control) {
+                    selection.reset()
+                }
+                selection.add(c);
+                var s = e.Helpers.getLineFromY(c, y.y);
+                if (s == -1) {
+                    selection.string = 0
+                } else {
+                    selection.string = s
+                }
+                var w, B;
+                for (var A = 0; A < c.notes.length; A++) {
+                    var g = c.vexflow.notes[A];
+                    var f = g.getX() + c.stave.getNoteStartX() + 10;
+                    var k = f + g.getWidth() + 4;
+                    if (f <= y.x) {
+                        B = c.notes[A];
+                        w = e.helpers.findPositionWithString(B, selection.string + 1)
+                    }
+                }
+                if (w) {
+                    selection.reset().add(w)
+                } else {
+                    if (B) {
+                        selection.reset().add(B)
+                    }
+                }
+            } else {
+                if (measureFound && !selection.contains(c) && !c.part.locked) {
+                    if (!keyMaster.control) {
+                        selection.reset()
+                    }
+                    selection.add(c);
+                    for (var A = 0; A < c.notes.length; A++) {
+                        var g = c.vexflow.notes[A];
+                        var f = g.getX() + c.stave.getNoteStartX() + 10;
+                        var k = f + g.getWidth() + 4;
+                        if (f <= y.x) {
+                            selection.reset().add(c.notes[A].keys.first())
+                        }
+                    }
+                }
+            }
+        }
+        score.constructVexFlow();
+        score.reset();
+        return false
+    })
+});
 //neo_willian
 //////////////////////////////
 // MONTA O HOVER NA TELA
 //////////////////////////////
-// $(document).ready(function () {
-//     var b = new Vex.Flow.Renderer(placeholderCanvas[0], Vex.Flow.Renderer.Backends.CANVAS);
-//     ctx2.clear = function () {
-//         ctx2.clearRect(-5000, 0, 10000, 5000)
-//     };
-//     var a = new Vex.Flow.Formatter();
-//     placeholderCanvas.mousemove(function (f) {
-//         var c = this.relMouseCoords(f);
-//         var g = selection.getM()[0];
-//         var d = false;
-//         ctx2.clear();
-//         selection.getM().forEach(function (n) {
-//             if (n && n.stave.containsPoint(c.x, c.y) && !n.part.locked) {
-//                 for (var l = 0; l < n.notes.length; l++) {
-//                     var m = n.notes[l];
-//                     var j = n.vexflow.notes[l];
-//                     ctx2.fillStyle = "rgba(0, 100, 255, 0.2)";
-//                     if (j.comparePoint(c.x, c.y) == "column" || j.comparePoint(c.x, c.y) == "note") {
-//                         var k, o = [];
-//                         if (n instanceof NotationMeasure) {
-//                             o = _.filter(m.keys, function (q) {
-//                                 var r = e.Helpers.getNoteFromY(n, c.y);
-//                                 return (q.toString()[q.toString().length - 1] == r[r.length - 1] && q.toString()[0] == r[0])
-//                             })
-//                         } else {} if (o.length > 0) {
-//                             k = o.first().getIndex();
-//                             roundRect(ctx2, j.getX() + n.stave.getNoteStartX() + 9, j.getYs()[k] - 9, 10 + 10, 18, 5, true, false);
-//                             d = true
-//                         }
-//                     }
-//                 }
-//                 if (d === false && n instanceof NotationMeasure) {
-//                     var m = new Vex.Flow.StaveNote({
-//                         clef: n.getClef(),
-//                         keys: [e.helpers.getNoteFromY(n, c.y)],
-//                         duration: $("button[name='noteDuration'].active").val() + ($("#rest").hasClass("active") ? "r" : "")
-//                     });
-//                     if ($("#dot").hasClass("active")) {
-//                         m.addDotToAll()
-//                     }
-//                     m.extraLeftPx = c.x - n.stave.getNoteStartX() - 17;
-//                     var p = new Vex.Flow.Voice({
-//                         num_beats: 4,
-//                         beat_value: 4,
-//                         resolution: Vex.Flow.RESOLUTION
-//                     });
-//                     Editor.vfFactory.processStems([m], m.clef);
-//                     p.setStrict(false);
-//                     p.addTickables([m]);
-//                     a.formatToStave([p], n.stave);
-//                     p.draw(ctx2, n.stave, "rgba(0, 100, 255, .4)")
-//                 } else {
-//                     if (d === false && n instanceof TabMeasure) {
-//                         var h = e.Helpers.getLineFromY(n, c.y);
-//                         if (h > -1) {
-//                             ctx2.fillStyle = "rgba(0, 100, 255, 0.1)";
-//                             roundRect(ctx2, n.stave.x - 5, n.stave.getYForLine(h) - 4, n.stave.width + 10, 9, 5, true, false)
-//                         }
-//                     }
-//                 }
-//             } else {
-//                 score.parts.forEach(function (q) {
-//                     q.measures.forEach(function (u) {
-//                         if (u.stave.containsPoint(c.x, c.y) && !u.part.locked && !selection.contains(u)) {
-//                             ctx2.clear();
-//                             ctx2.fillStyle = "rgba(0, 100, 255, 0.05)";
-//                             roundRect(ctx2, u.stave.x - 10, u.stave.y + 15, u.stave.width + 20, u.stave.getHeight(), 15, true, false);
-//                             for (var t = 0; t < u.notes.length; t++) {
-//                                 var s = u.vexflow.notes[t];
-//                                 ctx2.fillStyle = "rgba(0, 100, 255, 0.2)";
-//                                 var r = s.comparePoint(c.x, c.y);
-//                                 if (r == "column" || r == "note") {
-//                                     roundRect(ctx2, s.getX() + u.stave.getNoteStartX() + 9, s.getYs()[0] - 9, 18, 18, 5, true, false);
-//                                     d = true
-//                                 }
-//                             }
-//                         }
-//                     })
-//                 })
-//             }
-//         });
-//         if (selection.getM().length == 0) {
-//             score.parts.forEach(function (h) {
-//                 h.measures.forEach(function (m) {
-//                     if (m.stave.containsPoint(c.x, c.y) && !m.part.locked && !selection.contains(m)) {
-//                         ctx2.clear();
-//                         ctx2.fillStyle = "rgba(0, 100, 255, 0.05)";
-//                         roundRect(ctx2, m.stave.x - 10, m.stave.y + 15, m.stave.width + 20, m.stave.getHeight(), 15, true, false);
-//                         for (var l = 0; l < m.notes.length; l++) {
-//                             var k = m.vexflow.notes[l];
-//                             ctx2.fillStyle = "rgba(0, 100, 255, 0.2)";
-//                             var j = k.comparePoint(c.x, c.y);
-//                             if (j == "column" || j == "note") {
-//                                 roundRect(ctx2, k.getX() + m.stave.getNoteStartX() + 9, k.getYs()[0] - 9, 18, 18, 5, true, false);
-//                                 d = true
-//                             }
-//                         }
-//                     }
-//                 })
-//             })
-//         }
-//     });
-//     placeholderCanvas.mouseleave(function () {
-//         ctx2.clear()
-//     })
-// });
+$(document).ready(function () {
+    var b = new Vex.Flow.Renderer(placeholderCanvas[0], Vex.Flow.Renderer.Backends.CANVAS);
+    ctx2.clear = function () {
+        ctx2.clearRect(-5000, 0, 10000, 5000)
+    };
+    var a = new Vex.Flow.Formatter();
+    placeholderCanvas.mousemove(function (f) {
+        var c = this.relMouseCoords(f);
+        var g = selection.getM()[0];
+        var d = false;
+        ctx2.clear();
+        selection.getM().forEach(function (n) {
+            if (n && n.stave.containsPoint(c.x, c.y) && !n.part.locked) {
+                for (var l = 0; l < n.notes.length; l++) {
+                    var m = n.notes[l];
+                    var j = n.vexflow.notes[l];
+                    ctx2.fillStyle = "rgba(0, 100, 255, 0.2)";
+                    if (j.comparePoint(c.x, c.y) == "column" || j.comparePoint(c.x, c.y) == "note") {
+                        var k, o = [];
+                        if (n instanceof NotationMeasure) {
+                            o = _.filter(m.keys, function (q) {
+                                var r = e.Helpers.getNoteFromY(n, c.y);
+                                return (q.toString()[q.toString().length - 1] == r[r.length - 1] && q.toString()[0] == r[0])
+                            })
+                        } else {} if (o.length > 0) {
+                            k = o.first().getIndex();
+                            roundRect(ctx2, j.getX() + n.stave.getNoteStartX() + 9, j.getYs()[k] - 9, 10 + 10, 18, 5, true, false);
+                            d = true
+                        }
+                    }
+                }
+                if (d === false && n instanceof NotationMeasure) {
+                    var m = new Vex.Flow.StaveNote({
+                        clef: n.getClef(),
+                        keys: [e.helpers.getNoteFromY(n, c.y)],
+                        duration: $("button[name='noteDuration'].active").val() + ($("#rest").hasClass("active") ? "r" : "")
+                    });
+                    if ($("#dot").hasClass("active")) {
+                        m.addDotToAll()
+                    }
+                    m.extraLeftPx = c.x - n.stave.getNoteStartX() - 17;
+                    var p = new Vex.Flow.Voice({
+                        num_beats: 4,
+                        beat_value: 4,
+                        resolution: Vex.Flow.RESOLUTION
+                    });
+                    Editor.vfFactory.processStems([m], m.clef);
+                    p.setStrict(false);
+                    p.addTickables([m]);
+                    a.formatToStave([p], n.stave);
+                    p.draw(ctx2, n.stave, "rgba(0, 100, 255, .4)")
+                } else {
+                    if (d === false && n instanceof TabMeasure) {
+                        var h = e.Helpers.getLineFromY(n, c.y);
+                        if (h > -1) {
+                            ctx2.fillStyle = "rgba(0, 100, 255, 0.1)";
+                            roundRect(ctx2, n.stave.x - 5, n.stave.getYForLine(h) - 4, n.stave.width + 10, 9, 5, true, false)
+                        }
+                    }
+                }
+            } else {
+                score.parts.forEach(function (q) {
+                    q.measures.forEach(function (u) {
+                        if (u.stave.containsPoint(c.x, c.y) && !u.part.locked && !selection.contains(u)) {
+                            ctx2.clear();
+                            ctx2.fillStyle = "rgba(0, 100, 255, 0.05)";
+                            roundRect(ctx2, u.stave.x - 10, u.stave.y + 15, u.stave.width + 20, u.stave.getHeight(), 15, true, false);
+                            for (var t = 0; t < u.notes.length; t++) {
+                                var s = u.vexflow.notes[t];
+                                ctx2.fillStyle = "rgba(0, 100, 255, 0.2)";
+                                var r = s.comparePoint(c.x, c.y);
+                                if (r == "column" || r == "note") {
+                                    roundRect(ctx2, s.getX() + u.stave.getNoteStartX() + 9, s.getYs()[0] - 9, 18, 18, 5, true, false);
+                                    d = true
+                                }
+                            }
+                        }
+                    })
+                })
+            }
+        });
+        if (selection.getM().length == 0) {
+            score.parts.forEach(function (h) {
+                h.measures.forEach(function (m) {
+                    if (m.stave.containsPoint(c.x, c.y) && !m.part.locked && !selection.contains(m)) {
+                        ctx2.clear();
+                        ctx2.fillStyle = "rgba(0, 100, 255, 0.05)";
+                        roundRect(ctx2, m.stave.x - 10, m.stave.y + 15, m.stave.width + 20, m.stave.getHeight(), 15, true, false);
+                        for (var l = 0; l < m.notes.length; l++) {
+                            var k = m.vexflow.notes[l];
+                            ctx2.fillStyle = "rgba(0, 100, 255, 0.2)";
+                            var j = k.comparePoint(c.x, c.y);
+                            if (j == "column" || j == "note") {
+                                roundRect(ctx2, k.getX() + m.stave.getNoteStartX() + 9, k.getYs()[0] - 9, 18, 18, 5, true, false);
+                                d = true
+                            }
+                        }
+                    }
+                })
+            })
+        }
+    });
+    placeholderCanvas.mouseleave(function () {
+        ctx2.clear()
+    })
+});
 // $(document).ready(function (a) {
 //     a(document).unbind("mousewheel DOMMouseScroll").on("mousewheel DOMMouseScroll", function (f) {
 //         var b = event || f || window.event;
