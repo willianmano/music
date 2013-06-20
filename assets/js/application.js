@@ -154,8 +154,7 @@ $(document).ready(function(e){
   // Create the notes
   myNotes.push(new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "q" }));
   myNotes.push(new Vex.Flow.StaveNote({ keys: ["c/4"], duration: "q" }));
-  myNotes.push(new Vex.Flow.StaveNote({ keys: ["c/5"], duration: "q" }));
-  myNotes.push(new Vex.Flow.StaveNote({ keys: ["c/3"], duration: "q" }));
+  myNotes.push(new Vex.Flow.StaveNote({ keys: ["f/4"], duration: "h" }));
   myNotes.push(new Vex.Flow.StaveNote({ keys: ["b/4"], duration: "qr" }));
   myNotes.push(new Vex.Flow.StaveNote({ keys: ["c/3", "e/3", "g/3"], duration: "q" }));
   myNotes.push(new Vex.Flow.StaveNote({ keys: ["g/4"], duration: "h" }));
